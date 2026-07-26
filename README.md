@@ -11,7 +11,7 @@ An AI-driven closed-loop orchestration engine that uses Large Language Models (L
 
 ---
 
-## 🎯 Project Overview (For Technical Recruiters)
+## Project Overview
 
 Eco-Loop is a sophisticated orchestration pipeline demonstrating the integration of **LLM-based decision-making engines** with **deterministic physics simulators** (EnergyPlus). 
 
@@ -26,7 +26,115 @@ Instead of relying on LLMs for "blind" numerical guessing (which often results i
 
 ---
 
-## 🏗️ Architecture Design
+## Architecture Design
+
+```mermaid
+flowchart TD
+    %% Define Styles
+    classDef ui fill:#1E2530,stroke:#3498DB,stroke-width:2px,color:#FFF,rx:8px,ry:8px;
+    classDef orchestrator fill:#2C3E50,stroke:#E74C3C,stroke-width:2px,color:#FFF,rx:8px,ry:8px;
+    classDef tools fill:#273746,stroke:#F39C12,stroke-width:2px,color:#FFF,rx:8px,ry:8px;
+    classDef simulation fill:#1B2631,stroke:#2ECC71,stroke-width:2px,color:#FFF,rx:8px,ry:8px;
+    classDef ai fill:#212F3D,stroke:#9B59B6,stroke-width:2px,color:#FFF,rx:8px,ry:8px;
+    classDef models fill:#283747,stroke:#95A5A6,stroke-width:2px,color:#FFF,rx:8px,ry:8px;
+    classDef file fill:#34495E,stroke:#BDC3C7,stroke-dasharray: 5 5,color:#FFF,rx:8px,ry:8px;
+
+    %% Subgraphs for Organization
+    subgraph UserInterface [Presentation Layer]
+        A[app.py\nStreamlit Dashboard]:::ui
+    end
+
+    subgraph Controllers [Controller Layer]
+        B[DashboardController]:::orchestrator
+    end
+
+    subgraph Orchestration [Optimization Engine]
+        C[ClosedLoopAgent\nIterative Optimizer]:::orchestrator
+        D[ToolRegistry\nExecution Dispatcher]:::tools
+    end
+
+    subgraph Tools [Tool Abstractions]
+        T1[PrepareWorkingFileTool]:::tools
+        T2[RunSimulationTool]:::tools
+        T3[ParseResultsTool]:::tools
+        T4[FeatureEngineeringTool]:::tools
+        T5[ConvergenceCheckTool]:::tools
+        T6[ReportGenerationTool]:::tools
+    end
+
+    subgraph SimulationCore [EnergyPlus Simulation Layer]
+        S1[SimulationBuilder]:::simulation
+        S2[ScheduleModifier]:::simulation
+        S3[EnergyPlusRunner]:::simulation
+    end
+
+    subgraph AILayer [LLM & Reasoning Engine]
+        AI1[PromptBuilder\nFormat Candidate Matrix]:::ai
+        AI2[LLMClient\nGroq Llama 3.3 API]:::ai
+    end
+
+    subgraph DataModels [Shared Models & Schemas]
+        M1[BuildingState\nMetrics & Performance]:::models
+        M2[Decision\nCandidate Selection]:::models
+        M3[OptimizationHistory\nIterative Ledger]:::models
+    end
+
+    subgraph FileSystem [File Storage & Config]
+        F1[(ORIGINAL_IDF)]:::file
+        F2[(WORKING_IDF)]:::file
+        F3[(eplusout.csv)]:::file
+        F4[(Session Logs & Artifacts)]:::file
+    end
+
+    %% Wiring it all together
+    
+    %% UI to Controller
+    A -- "User Configuration\nMax Iterations" --> B
+    
+    %% Controller to Agent
+    B -- "run_optimization()" --> C
+    B -- "Load JSON/MD" --> F4
+    
+    %% Agent to Registry
+    C -- "Execute Step" --> D
+    
+    %% Registry to specific tools
+    D --> T1
+    D --> T2
+    D --> T3
+    D --> T4
+    D --> T5
+    D --> T6
+    
+    %% Simulation Process
+    T1 -- "Request New IDF" --> S1
+    S1 -- "Duplicate" --> F1
+    S1 -- "Apply Setpoints" --> S2
+    S2 -- "Overwrite" --> F2
+    
+    T2 -- "Trigger Subprocess" --> S3
+    S3 -- "Execute Simulation" --> F2
+    S3 -- "Generate Results" --> F3
+    
+    %% Parsing & Engineering
+    T3 -- "Read Output" --> F3
+    T3 -- "Instantiate" --> M1
+    T4 -- "Compute Loads/Comfort" --> M1
+    
+    %% LLM Process
+    C -- "Candidate Context\n& Current State" --> AI1
+    AI1 -- "Formatted Engineering Policy" --> AI2
+    AI2 -- "JSON Output" --> M2
+    M2 -- "selected_candidate_index" --> C
+    
+    %% Tracking & Logging
+    C -- "Track History" --> M3
+    M3 -- "Log Iteration" --> F4
+    T6 -- "Final Summary" --> F4
+    
+    %% Highlight the Simulation-Guided Loop Loop
+    C -. "Iteration Loop\n(Explore Candidates)" .-> C
+```
 
 The system runs on four core layers, all written in modular, testable Python:
 
@@ -49,7 +157,7 @@ A beautiful Streamlit dashboard visualizes the closed-loop progression, displayi
 
 ---
 
-## 🚀 How to Run Locally
+## How to Run Locally
 
 ### Prerequisites
 - Python 3.10+
@@ -86,6 +194,6 @@ Navigate to `http://localhost:8501` to use the interactive application.
 
 ---
 
-## 💡 Why This Stands Out
+## Why This Stands Out
 
 This project moves beyond standard RAG or basic chatbot implementations. It is an **Agentic AI System** dealing with autonomous loop control, physical simulation integration, state persistence, strict schema validation, and failure-tolerant architecture design. It showcases backend system design, prompt engineering, and UI development—a complete full-stack AI engineering deliverable.
