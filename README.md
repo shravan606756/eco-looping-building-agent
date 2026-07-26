@@ -26,6 +26,19 @@ Instead of relying on LLMs for "blind" numerical guessing (which often results i
 
 ---
 
+## Simulation Environment & Dataset
+
+To rigorously test the optimization engine, we selected industry-standard reference data for the building model and meteorological conditions:
+
+1. **Building Model (`5ZoneAirCooled.idf`)**
+   - **What it is:** A standard Department of Energy (DOE) reference building representing a small, multi-zone commercial office space.
+   - **Why we chose it:** It provides a well-documented baseline with complex, non-trivial thermodynamic interactions between zones (utilizing standard DX cooling coils and gas heating). It is computationally lightweight enough for rapid iterative simulations while still reflecting realistic commercial HVAC behavior.
+2. **Weather Data (`USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw`)**
+   - **What it is:** The Typical Meteorological Year (TMY3) dataset for Chicago O'Hare International Airport.
+   - **Why we chose it:** Chicago is notorious for extreme seasonal variations—harsh, freezing winters and hot, humid summers. Testing the LLM against this dataset provides a rigorous stress test, forcing the agent to dynamically balance severe heating and cooling loads and proving the robustness of the engineering policy under difficult weather conditions.
+
+---
+
 ## Architecture Design
 
 ```mermaid
